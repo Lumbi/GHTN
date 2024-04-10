@@ -25,7 +25,7 @@ namespace GHTN
 			World::Property property, 
 			Predicate predicate, 
 			World::State expected,
-			bool negate = false // TODO: Add constexpr symbol name for negation
+			bool negate = false
 		);
 
 	public:

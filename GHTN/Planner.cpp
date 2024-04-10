@@ -41,7 +41,7 @@ namespace GHTN
 			else
 			{
 				GHTN::Task::SubTaskContainer const& subTasks = *task->GetSubTasks();
-				// TODO: check that subtasks is not empty
+				// TODO: Assert if subtasks is not empty
 				switch (task->GetComposition())
 				{
 				case GHTN::Task::Composition::all:

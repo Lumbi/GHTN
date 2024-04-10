@@ -36,7 +36,7 @@ namespace GHTN
 
 	void Task::AddEffect(Effect&& effect)
 	{
-		// TODO: Composite nodes cannot have effects
+		// TODO: Assert if composite node
 		m_Effects.emplace_back(std::move(effect));
 	}
 

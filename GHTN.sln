@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GHTN", "GHTN\GHTN.vcxproj", "{B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GHTNTest", "GHTNTest\GHTNTest.vcxproj", "{3F59213E-C733-401C-B336-47C129144C3B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C}.Debug|x64.ActiveCfg = Debug|x64
+		{B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C}.Debug|x64.Build.0 = Debug|x64
+		{B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C}.Release|x64.ActiveCfg = Release|x64
+		{B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C}.Release|x64.Build.0 = Release|x64
+		{3F59213E-C733-401C-B336-47C129144C3B}.Debug|x64.ActiveCfg = Debug|x64
+		{3F59213E-C733-401C-B336-47C129144C3B}.Debug|x64.Build.0 = Debug|x64
+		{3F59213E-C733-401C-B336-47C129144C3B}.Release|x64.ActiveCfg = Release|x64
+		{3F59213E-C733-401C-B336-47C129144C3B}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D22A8FEE-5D73-43CA-9089-6B3D4933CB07}
+	EndGlobalSection
+EndGlobal

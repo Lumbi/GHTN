@@ -1,81 +1,12 @@
-#include <iostream>
-#include <memory>
-#include <vector>
-#include <initializer_list>
-#include <functional>
-
-#include "GHTN/Planner.h"
-#include "GHTN/Domain.h"
-#include "GHTN/Task.h"
-#include "GHTN/Operation.h"
-#include "GHTN/World.h"
 #include "GHTN/Condition.h"
+#include "GHTN/Domain.h"
 #include "GHTN/Effect.h"
+#include "GHTN/Operation.h"
+#include "GHTN/Planner.h"
+#include "GHTN/Task.h"
+#include "GHTN/World.h"
 
-#include <vector>
-#include <algorithm>
-
-namespace GHTNTest
-{
-    struct TestEntry
-    {
-        std::string m_Name;
-        std::function<void(void)> m_Func;
-    };
-
-    class TestRegistry
-    {
-    public:
-        static TestRegistry& Instance()
-        {
-            static TestRegistry instance;
-            return instance;
-        }
-
-        void Register(std::string name, std::function<void()> func)
-        {
-            m_TestsEntries.emplace_back(std::move(name), std::move(func));
-        }
-
-        void RunAllTests()
-        {
-            for (auto&& entry : m_TestsEntries)
-            {
-                std::string testDisplayName(entry.m_Name);
-                std::replace(std::begin(testDisplayName), std::end(testDisplayName), '_', ' ');
-
-                std::cout << "Testing: '" << testDisplayName << "'\n";
-                entry.m_Func();
-            }
-        }
-
-    private:
-        std::vector<TestEntry> m_TestsEntries;
-    };
-}
-
-#define TEST(TestName) \
-void TestName(); \
-namespace \
-{ \
-    [[maybe_unused]] static auto TestRegistrationHandler_##TestName = []() \
-    { \
-        using namespace GHTNTest; \
-        TestRegistry::Instance().Register(#TestName, []() { TestName(); }); \
-        return nullptr; \
-    } \
-    (); \
-} \
-void TestName()
-
-#define EXPECT(expression) \
-{ \
-    if (!(expression)) \
-    { \
-        printf("Expectation failure @ %s::%d - expected '%s'\n", __FUNCTION__, __LINE__, #expression); \
-        return; \
-    } \
-}
+#include "Test.h"
 
 namespace GHTNTest
 {
@@ -529,5 +460,5 @@ namespace GHTNTest
 
 int main()
 {
-    GHTNTest::TestRegistry::Instance().RunAllTests();
+    GHTNTest::RunAllTests();
 }

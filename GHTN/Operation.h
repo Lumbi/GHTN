@@ -11,6 +11,14 @@ namespace GHTN
 		friend class Debug;
 
 	public:
+		enum class Result
+		{
+			running,
+			success,
+			failure
+		};
+
+	public:
 		GHTN_API explicit Operation();
 
 	public:

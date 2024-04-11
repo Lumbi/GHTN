@@ -1,10 +1,10 @@
 #pragma once
 
+#include "GHTN.h"
+
 #include <memory>
 #include <vector>
 #include <unordered_set>
-
-#include "GHTN.h"
 
 namespace GHTN
 {

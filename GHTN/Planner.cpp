@@ -16,11 +16,6 @@
 
 namespace GHTN
 {
-	bool Planner::CanExecute(Task const& task, World const& world)
-	{
-		return task.m_Conditions.Check(world);
-	}
-
 	World Planner::Apply(Task const& task, World world)
 	{
 		for (auto&& effect : task.m_Effects)
@@ -32,7 +27,7 @@ namespace GHTN
 
 	std::tuple<World, Planner::PartialPlan> Planner::RecursivePartialPlan(Task const* task, World const world)
 	{
-		if (CanExecute(*task, world))
+		if (task->CanExecute(world))
 		{
 			if (task->IsPrimitive())
 			{

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GHTN.h"
-// #include "World.h"
 
 #include <vector>
 #include <tuple>
@@ -31,7 +30,6 @@ namespace GHTN
 		using PartialPlan = std::vector<Task const*>;
 
 		static std::tuple<World, PartialPlan> RecursivePartialPlan(Task const*, World);
-		static bool CanExecute(Task const& task, World const& world);
 		static World Apply(Task const& task, World world);
 	};
 }

@@ -64,4 +64,9 @@ namespace GHTN
 	{
 		return std::get_if<SubTaskContainer>(&m_Content);
 	}
+
+	bool Task::CanExecute(World const& world) const
+	{
+		return m_Conditions.Check(world);
+	}
 }

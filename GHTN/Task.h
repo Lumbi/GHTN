@@ -1,12 +1,13 @@
 #pragma once
 
+#include "GHTN.h"
+
 #include <initializer_list>
 #include <memory>
 #include <string>
 #include <variant>
 #include <vector>
 
-#include "GHTN.h"
 #include "Condition.h"
 #include "Effect.h"
 
@@ -61,6 +62,8 @@ namespace GHTN
 		Operation const* GetOperation() const;
 
 		SubTaskContainer const* GetSubTasks() const;
+
+		bool CanExecute(World const&) const;
 
 	private:
 		std::variant<Operation const*, SubTaskContainer> m_Content;

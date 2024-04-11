@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GHTN.h"
+
 #include <concepts>
 #include <variant>
 

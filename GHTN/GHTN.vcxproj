@@ -86,6 +86,8 @@
     <ClInclude Include="GHTN.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="Planner.h" />
+    <ClInclude Include="Runner.h" />
+    <ClInclude Include="Sensor.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
@@ -97,6 +99,8 @@
     <ClCompile Include="Effecting.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="Planner.cpp" />
+    <ClCompile Include="Runner.cpp" />
+    <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

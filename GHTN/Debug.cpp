@@ -1,7 +1,5 @@
 #include "Debug.h"
 
-#include <format>
-
 #include "Task.h"
 #include "Operation.h"
 

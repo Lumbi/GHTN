@@ -2,10 +2,6 @@
 
 #include "GHTN.h"
 
-#include <memory>
-#include <vector>
-#include <unordered_set>
-
 namespace GHTN
 {
 	class Task;

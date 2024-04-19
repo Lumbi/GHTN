@@ -4,14 +4,9 @@
 
 #include "World.h"
 
-#include <unordered_map>
-#include <memory>
-#include <variant>
-#include <functional>
-
 namespace GHTN
 {
-	enum class Predicate : char
+	enum class Predicate : std::uint8_t
 	{
 		equal,
 		less,
@@ -55,7 +50,6 @@ namespace GHTN
 		using Index = std::size_t;
 		enum class Logic : bool { AND, OR };
 		using Node = std::variant<std::nullptr_t, Logic, Condition>;
-		static constexpr Index INVALID_INDEX = static_cast<Index>(-1);
 
 	public:
 		ConditionTree() = default;

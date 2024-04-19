@@ -1,8 +1,5 @@
 #include "Condition.h"
 
-#include <type_traits>
-#include <deque>
-
 namespace GHTN
 {
 	Condition::Condition

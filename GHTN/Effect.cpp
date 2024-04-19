@@ -1,8 +1,5 @@
 #include "Effect.h"
 
-#include <variant>
-#include <type_traits>
-
 namespace GHTN
 {
 	void Effects::Set::operator()(World& world) const

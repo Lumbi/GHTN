@@ -2,9 +2,6 @@
 
 #include "GHTN.h"
 
-#include <vector>
-#include <tuple>
-
 namespace GHTN
 {
 	class Domain;

@@ -1,7 +1,6 @@
 #include "Planner.h"
 
 #include "Task.h"
-
 #include "Domain.h"
 #include "Operation.h"
 #include "Effect.h"
@@ -9,10 +8,6 @@
 #include "Task.h"
 #include "Log.h"
 #include "Debug.h"
-
-#include <deque>
-#include <variant>
-#include <algorithm>
 
 namespace GHTN
 {

@@ -2,9 +2,6 @@
 
 #include "GHTN.h"
 
-#include <concepts>
-#include <variant>
-
 #include "World.h"
 
 namespace GHTN

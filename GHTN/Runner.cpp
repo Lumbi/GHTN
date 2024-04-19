@@ -49,6 +49,7 @@ namespace GHTN
 				if (currentTask.CanExecute(world))
 				{
 					m_CurrentOperation = currentTask.GetOperation();
+					m_OperationExecutor->Start(*m_CurrentOperation, std::span(currentTask.GetParameters()));
 				}
 				else
 				{

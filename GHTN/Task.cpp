@@ -10,12 +10,20 @@ namespace GHTN
 	Task::Task(Operation const* operation)
 		: m_Content(operation)
 		, m_Composition(Task::ALL)
+		, m_Conditions()
+		, m_Parameters()
+		, m_Effects()
+		, m_Name()
 	{
 	}
 
 	Task::Task(Task::Composition composition, std::initializer_list<Task const*> subTasks)
 		: m_Content(subTasks)
 		, m_Composition(composition)
+		, m_Conditions()
+		, m_Parameters()
+		, m_Effects()
+		, m_Name()
 	{
 	}
 
@@ -29,9 +37,15 @@ namespace GHTN
 		m_Name = std::move(name);
 	}
 
-	GHTN_API void Task::SetConditions(ConditionTree&& conditions)
+	void Task::SetConditions(ConditionTree&& conditions)
 	{
 		m_Conditions = std::move(conditions);
+	}
+
+	void Task::SetParameter(Parameter::Index index, Parameter::Value value)
+	{
+		// TODO: Assert if index out of bounds
+		m_Parameters[index] = value;
 	}
 
 	void Task::AddEffect(Effect&& effect)
@@ -45,6 +59,16 @@ namespace GHTN
 		return std::holds_alternative<Operation const*>(m_Content);
 	}
 
+	Operation const* Task::GetOperation() const
+	{
+		return *std::get_if<Operation const*>(&m_Content);
+	}
+
+	Task::ParameterContainer const& Task::GetParameters() const
+	{
+		return m_Parameters;
+	}
+
 	bool Task::IsComposite() const
 	{
 		return std::holds_alternative<SubTaskContainer>(m_Content);
@@ -53,11 +77,6 @@ namespace GHTN
 	Task::Composition Task::GetComposition() const
 	{
 		return m_Composition;
-	}
-
-	Operation const* Task::GetOperation() const
-	{
-		return *std::get_if<Operation const*>(&m_Content);
 	}
 
 	Task::SubTaskContainer const* Task::GetSubTasks() const

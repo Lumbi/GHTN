@@ -4,6 +4,7 @@
 
 #include "Condition.h"
 #include "Effect.h"
+#include "Parameter.h"
 
 namespace GHTN
 {
@@ -21,16 +22,13 @@ namespace GHTN
 		friend class Debug;
 
 	public:
-		enum class Composition
-		{
-			all,
-			any,
-		};
+		enum class Composition { all, any };
 		static constexpr Composition ALL = Composition::all;
 		static constexpr Composition ANY = Composition::any;
 
 		using SubTaskContainer = std::vector<Task const*>;
 		using EffectContainer = std::vector<Effect>;
+		using ParameterContainer = std::array<Parameter::Value, Parameter::MAX_COUNT>;
 
 	public:
 		GHTN_API explicit Task(Operation const*);
@@ -44,25 +42,31 @@ namespace GHTN
 
 		GHTN_API void SetConditions(ConditionTree&&);
 
+		GHTN_API void SetParameter(Parameter::Index, Parameter::Value);
+
 		GHTN_API void AddEffect(Effect&&);
 
 	public:
 		bool IsPrimitive() const;
 
+		Operation const* GetOperation() const;
+
+		ParameterContainer const& GetParameters() const;
+
 		bool IsComposite() const;
 
 		Composition GetComposition() const;
 
-		Operation const* GetOperation() const;
-
 		SubTaskContainer const* GetSubTasks() const;
 
+	public:
 		bool CanExecute(World const&) const;
 
 	private:
 		std::variant<Operation const*, SubTaskContainer> m_Content;
 		Composition m_Composition;
 		ConditionTree m_Conditions;
+		ParameterContainer m_Parameters;
 		EffectContainer m_Effects;
 		std::string m_Name;
 	};

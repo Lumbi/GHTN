@@ -4,12 +4,18 @@
 
 #include "Planner.h"
 #include "Operation.h"
+#include "Parameter.h"
 
 namespace GHTN
 {
 	class OperationExecutorInterface
 	{
 	public:
+		using Parameters = std::span<const Parameter::Value, Parameter::MAX_COUNT>;
+
+	public:
+		virtual void Start(Operation const&, Parameters) = 0;
+
 		virtual Operation::Result Execute(Operation const&) = 0;
 
 		virtual void Abort(Operation const&) = 0;
@@ -29,7 +35,6 @@ namespace GHTN
 		GHTN_API void Update(World const&);
 
 	private:
-
 		void AdvanceToNextTask();
 
 	private:

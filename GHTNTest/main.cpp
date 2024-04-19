@@ -3,6 +3,7 @@
 #include "GHTN/Effect.h"
 #include "GHTN/Operation.h"
 #include "GHTN/Planner.h"
+#include "GHTN/Runner.h"
 #include "GHTN/Task.h"
 #include "GHTN/World.h"
 
@@ -455,6 +456,79 @@ namespace GHTNTest
         EXPECT(plan[1] == &increment);
         EXPECT(plan[2] == &increment);
         EXPECT(plan[3] == &check);
+    }
+
+    TEST(Run_plan_simple)
+    {
+        Operation operation1;
+        Operation operation2;
+        Operation operation3;
+        Task task1(&operation1);
+        Task task2(&operation2);
+        Task task3(&operation3);
+        Task root(Task::ALL, { &task1, &task2, &task3 });
+        Domain domain(&root);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+
+        struct TestExecutor : public OperationExecutorInterface
+        {
+            void Start(Operation const& operation, Parameters parameters) override
+            {
+                m_StartedOperations.emplace_back(&operation);
+            }
+
+            Operation::Result Execute(Operation const& operation) override
+            {
+                m_ExecutedOperations.emplace_back(&operation);
+                return Operation::Result::success;
+            }
+
+            void Abort(Operation const& operation) override
+            {
+                m_AbortedExecutions.emplace_back(&operation);
+            }
+
+            std::vector<Operation const*> m_StartedOperations;
+            std::vector<Operation const*> m_ExecutedOperations;
+            std::vector<Operation const*> m_AbortedExecutions;;
+        } testExecutor;
+
+        Runner runner(&testExecutor);
+
+        EXPECT(!runner.IsRunning());
+        runner.Run(&plan);
+
+        {
+            EXPECT(runner.IsRunning());
+            runner.Update(world);
+            EXPECT(runner.IsRunning());
+            EXPECT(testExecutor.m_StartedOperations.size() == 1);
+            EXPECT(testExecutor.m_StartedOperations[0] == &operation1);
+            EXPECT(testExecutor.m_ExecutedOperations.size() == 1);
+            EXPECT(testExecutor.m_ExecutedOperations[0] == &operation1);
+            EXPECT(testExecutor.m_AbortedExecutions.empty());
+        }
+        {
+            EXPECT(runner.IsRunning());
+            runner.Update(world);
+            EXPECT(runner.IsRunning());
+            EXPECT(testExecutor.m_StartedOperations.size() == 2);
+            EXPECT(testExecutor.m_StartedOperations[1] == &operation2);
+            EXPECT(testExecutor.m_ExecutedOperations.size() == 2);
+            EXPECT(testExecutor.m_ExecutedOperations[1] == &operation2);
+            EXPECT(testExecutor.m_AbortedExecutions.empty());
+        }
+        {
+            EXPECT(runner.IsRunning());
+            runner.Update(world);
+            EXPECT(!runner.IsRunning());
+            EXPECT(testExecutor.m_StartedOperations.size() == 3);
+            EXPECT(testExecutor.m_StartedOperations[2] == &operation3);
+            EXPECT(testExecutor.m_ExecutedOperations.size() == 3);
+            EXPECT(testExecutor.m_ExecutedOperations[2] == &operation3);
+            EXPECT(testExecutor.m_AbortedExecutions.empty());
+        }
     }
 }
 

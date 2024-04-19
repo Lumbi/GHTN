@@ -85,6 +85,7 @@
     <ClInclude Include="Effecting.h" />
     <ClInclude Include="GHTN.h" />
     <ClInclude Include="Operation.h" />
+    <ClInclude Include="Parameter.h" />
     <ClInclude Include="Planner.h" />
     <ClInclude Include="Runner.h" />
     <ClInclude Include="Sensor.h" />
@@ -98,6 +99,7 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Effecting.cpp" />
     <ClCompile Include="Operation.cpp" />
+    <ClCompile Include="Parameter.cpp" />
     <ClCompile Include="Planner.cpp" />
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Sensor.cpp" />

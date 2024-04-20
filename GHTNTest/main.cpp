@@ -465,6 +465,7 @@ namespace GHTNTest
             void Execute(Operation const& operation, Parameters parameters) override
             {
                 m_ExecutedOperations.emplace_back(&operation);
+                std::copy(parameters.begin(), parameters.end(), m_OperationParameters[&operation].begin());
             }
 
             void Stop(Operation const& operation) override
@@ -473,6 +474,7 @@ namespace GHTNTest
             }
 
             std::vector<Operation const*> m_ExecutedOperations;
+            std::unordered_map<Operation const*, std::array<Parameter::Value, Parameter::MAX_COUNT>> m_OperationParameters;
             std::vector<Operation const*> m_StoppedOperations;
         };
 
@@ -634,6 +636,34 @@ namespace GHTNTest
             EXPECT(executor.m_ExecutedOperations[0] == &operation1);
             EXPECT(executor.m_StoppedOperations.size() == 1);
             EXPECT(executor.m_StoppedOperations[0] == &operation1);
+        }
+    }
+
+    TEST(Run_plan_with_task_and_parameters)
+    {
+        Operation operation;
+        Task task(&operation);
+        task.SetParameter(0, 17);
+        task.SetParameter(4, 99);
+        task.SetParameter(Parameter::MAX_COUNT - 1, 36);
+        Domain domain(&task);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+        MockExecutor::AlwaysSucceed executor;
+        Runner runner(&executor);
+        runner.Run(&plan);
+
+        EXPECT(runner.IsRunning());
+        {
+            runner.Update(world);
+            EXPECT(executor.m_OperationParameters.size() == 1);
+            EXPECT(executor.m_OperationParameters.find(&operation) != executor.m_OperationParameters.end());
+            EXPECT(executor.m_OperationParameters.at(&operation).front() == 17);
+            for (int i = 1; i < Parameter::MAX_COUNT - 1; ++i)
+            {
+                EXPECT(executor.m_OperationParameters.at(&operation)[i] == (i == 4 ? 99 : 0));
+            }
+            EXPECT(executor.m_OperationParameters.at(&operation).back() == 36);
         }
     }
 }

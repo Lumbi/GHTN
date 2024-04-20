@@ -24,7 +24,7 @@ namespace GHTN
 	{
 		if (m_CurrentOperation)
 		{
-			m_OperationExecutor->Abort(*m_CurrentOperation);
+			m_OperationExecutor->Stop(*m_CurrentOperation);
 			m_CurrentOperation = nullptr;
 		}
 
@@ -49,7 +49,7 @@ namespace GHTN
 				if (currentTask.CanExecute(world))
 				{
 					m_CurrentOperation = currentTask.GetOperation();
-					m_OperationExecutor->Start(*m_CurrentOperation, std::span(currentTask.GetParameters()));
+					m_OperationExecutor->Execute(*m_CurrentOperation, std::span(currentTask.GetParameters()));
 				}
 				else
 				{
@@ -59,7 +59,7 @@ namespace GHTN
 
 			if (m_CurrentOperation)
 			{
-				Operation::Result const result = m_OperationExecutor->Execute(*m_CurrentOperation);
+				Operation::Result const result = m_OperationExecutor->Check(*m_CurrentOperation);
 				switch (result)
 				{
 				case Operation::Result::running: break;
@@ -72,6 +72,10 @@ namespace GHTN
 
 	void Runner::AdvanceToNextTask()
 	{
+		if (m_CurrentOperation)
+		{
+			m_OperationExecutor->Stop(*m_CurrentOperation);
+		}
 		m_CurrentOperation = nullptr;
 		++m_CurrentTask;
 	}

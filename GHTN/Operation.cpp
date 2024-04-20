@@ -3,6 +3,7 @@
 namespace GHTN
 {
 	Operation::Operation()
+		: m_Name()
 	{
 	}
 

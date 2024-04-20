@@ -14,11 +14,11 @@ namespace GHTN
 		using Parameters = std::span<const Parameter::Value, Parameter::MAX_COUNT>;
 
 	public:
-		virtual void Start(Operation const&, Parameters) = 0;
+		virtual void Execute(Operation const&, Parameters) = 0;
 
-		virtual Operation::Result Execute(Operation const&) = 0;
+		virtual Operation::Result Check(Operation const&) = 0;
 
-		virtual void Abort(Operation const&) = 0;
+		virtual void Stop(Operation const&) = 0;
 	};
 
 	class Runner

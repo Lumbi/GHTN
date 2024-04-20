@@ -458,7 +458,108 @@ namespace GHTNTest
         EXPECT(plan[3] == &check);
     }
 
-    TEST(Run_plan_simple)
+    namespace MockExecutor
+    {
+        struct Base : public OperationExecutorInterface
+        {
+            void Execute(Operation const& operation, Parameters parameters) override
+            {
+                m_ExecutedOperations.emplace_back(&operation);
+            }
+
+            void Stop(Operation const& operation) override
+            {
+                m_StoppedOperations.emplace_back(&operation);
+            }
+
+            std::vector<Operation const*> m_ExecutedOperations;
+            std::vector<Operation const*> m_StoppedOperations;
+        };
+
+        struct AlwaysSucceed : public Base
+        {
+            Operation::Result Check(Operation const&) override
+            {
+                return Operation::Result::success;
+            }
+        };
+
+        struct AlwaysFail : public Base
+        {
+            Operation::Result Check(Operation const&) override
+            {
+                return Operation::Result::failure;
+            }
+        };
+
+        struct AlwaysRunning : public Base
+        {
+            Operation::Result Check(Operation const&) override
+            {
+                return Operation::Result::running;
+            }
+        };
+    }
+
+    TEST(Plan_not_running_before_calling_Run)
+    {
+        Operation operation;
+        Task task(&operation);
+        Domain domain(&task);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+        MockExecutor::AlwaysRunning executor;
+        Runner runner(&executor);
+
+        EXPECT(!runner.IsRunning());
+    }
+
+    TEST(Run_plan_aborted_while_running)
+    {
+        Operation operation;
+        Task task(&operation);
+        Domain domain(&task);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+        MockExecutor::AlwaysRunning executor;
+        Runner runner(&executor);
+        runner.Run(&plan);
+
+        EXPECT(runner.IsRunning());
+        {
+            runner.Update(world);
+            EXPECT(runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 1);
+            EXPECT(executor.m_ExecutedOperations[0] == &operation);
+            EXPECT(executor.m_StoppedOperations.empty());
+        }        
+        {
+            runner.Abort();
+            EXPECT(!runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 1);
+            EXPECT(executor.m_ExecutedOperations[0] == &operation);
+            EXPECT(executor.m_StoppedOperations.size() == 1);
+            EXPECT(executor.m_StoppedOperations[0] == &operation);
+        }
+        {
+            runner.Update(world);
+            EXPECT(!runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 1);
+            EXPECT(executor.m_ExecutedOperations[0] == &operation);
+            EXPECT(executor.m_StoppedOperations.size() == 1);
+            EXPECT(executor.m_StoppedOperations[0] == &operation);
+        }
+        {
+            runner.Abort();
+            EXPECT(!runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 1);
+            EXPECT(executor.m_ExecutedOperations[0] == &operation);
+            EXPECT(executor.m_StoppedOperations.size() == 1);
+            EXPECT(executor.m_StoppedOperations[0] == &operation);
+        }
+    }
+
+    TEST(Run_plan_with_simple_tasks_and_succeeding_operations)
     {
         Operation operation1;
         Operation operation2;
@@ -470,64 +571,69 @@ namespace GHTNTest
         Domain domain(&root);
         World world;
         Plan plan = Planner::Find(domain, world);
-
-        struct TestExecutor : public OperationExecutorInterface
-        {
-            void Start(Operation const& operation, Parameters parameters) override
-            {
-                m_StartedOperations.emplace_back(&operation);
-            }
-
-            Operation::Result Execute(Operation const& operation) override
-            {
-                m_ExecutedOperations.emplace_back(&operation);
-                return Operation::Result::success;
-            }
-
-            void Abort(Operation const& operation) override
-            {
-                m_AbortedExecutions.emplace_back(&operation);
-            }
-
-            std::vector<Operation const*> m_StartedOperations;
-            std::vector<Operation const*> m_ExecutedOperations;
-            std::vector<Operation const*> m_AbortedExecutions;;
-        } testExecutor;
-
-        Runner runner(&testExecutor);
-
-        EXPECT(!runner.IsRunning());
+        MockExecutor::AlwaysSucceed executor;
+        Runner runner(&executor);
         runner.Run(&plan);
 
+        EXPECT(runner.IsRunning());
         {
-            EXPECT(runner.IsRunning());
             runner.Update(world);
             EXPECT(runner.IsRunning());
-            EXPECT(testExecutor.m_StartedOperations.size() == 1);
-            EXPECT(testExecutor.m_StartedOperations[0] == &operation1);
-            EXPECT(testExecutor.m_ExecutedOperations.size() == 1);
-            EXPECT(testExecutor.m_ExecutedOperations[0] == &operation1);
-            EXPECT(testExecutor.m_AbortedExecutions.empty());
+            EXPECT(executor.m_ExecutedOperations.size() == 1);
+            EXPECT(executor.m_ExecutedOperations[0] == &operation1);
+            EXPECT(executor.m_StoppedOperations.size() == 1);
+            EXPECT(executor.m_StoppedOperations[0] == &operation1);
         }
         {
-            EXPECT(runner.IsRunning());
             runner.Update(world);
             EXPECT(runner.IsRunning());
-            EXPECT(testExecutor.m_StartedOperations.size() == 2);
-            EXPECT(testExecutor.m_StartedOperations[1] == &operation2);
-            EXPECT(testExecutor.m_ExecutedOperations.size() == 2);
-            EXPECT(testExecutor.m_ExecutedOperations[1] == &operation2);
-            EXPECT(testExecutor.m_AbortedExecutions.empty());
+            EXPECT(executor.m_ExecutedOperations.size() == 2);
+            EXPECT(executor.m_ExecutedOperations[1] == &operation2);
+            EXPECT(executor.m_StoppedOperations.size() == 2);
+            EXPECT(executor.m_StoppedOperations[1] == &operation2);
         }
         {
-            EXPECT(runner.IsRunning());
             runner.Update(world);
             EXPECT(!runner.IsRunning());
-            EXPECT(testExecutor.m_StartedOperations.size() == 3);
-            EXPECT(testExecutor.m_StartedOperations[2] == &operation3);
-            EXPECT(testExecutor.m_ExecutedOperations.size() == 3);
-            EXPECT(testExecutor.m_ExecutedOperations[2] == &operation3);
-            EXPECT(testExecutor.m_AbortedExecutions.empty());
+            EXPECT(executor.m_ExecutedOperations.size() == 3);
+            EXPECT(executor.m_ExecutedOperations[2] == &operation3);
+            EXPECT(executor.m_StoppedOperations.size() == 3);
+            EXPECT(executor.m_StoppedOperations[2] == &operation3);
+        }
+        {
+            runner.Update(world);
+            EXPECT(!runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 3);
+            EXPECT(executor.m_ExecutedOperations[2] == &operation3);
+            EXPECT(executor.m_StoppedOperations.size() == 3);
+            EXPECT(executor.m_StoppedOperations[2] == &operation3);
+        }
+    }
+
+    TEST(Run_plan_with_simple_tasks_and_failing_operations)
+    {
+        Operation operation1;
+        Operation operation2;
+        Operation operation3;
+        Task task1(&operation1);
+        Task task2(&operation2);
+        Task task3(&operation3);
+        Task root(Task::ALL, { &task1, &task2, &task3 });
+        Domain domain(&root);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+        MockExecutor::AlwaysFail executor;
+        Runner runner(&executor);
+        runner.Run(&plan);
+
+        EXPECT(runner.IsRunning());
+        {
+            runner.Update(world);
+            EXPECT(!runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 1);
+            EXPECT(executor.m_ExecutedOperations[0] == &operation1);
+            EXPECT(executor.m_StoppedOperations.size() == 1);
+            EXPECT(executor.m_StoppedOperations[0] == &operation1);
         }
     }
 }

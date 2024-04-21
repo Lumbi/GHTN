@@ -1,13 +1,12 @@
 #include "Planner.h"
 
-#include "Task.h"
-#include "Domain.h"
-#include "Operation.h"
-#include "Effect.h"
-#include "World.h"
-#include "Task.h"
-#include "Log.h"
 #include "Debug.h"
+#include "Domain.h"
+#include "Effect.h"
+#include "Log.h"
+#include "Operation.h"
+#include "Task.h"
+#include "World.h"
 
 namespace GHTN
 {
@@ -25,7 +24,7 @@ namespace GHTN
 			else
 			{
 				GHTN::Task::SubTaskContainer const& subTasks = *task->GetSubTasks();
-				// TODO: Assert if subtasks is not empty
+				GHTN_ASSERT(!subTasks.empty(), "Composite task must have at least one subtask");
 				switch (task->GetComposition())
 				{
 				case GHTN::Task::Composition::all:

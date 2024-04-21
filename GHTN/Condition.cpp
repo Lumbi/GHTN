@@ -1,5 +1,7 @@
 #include "Condition.h"
 
+#include "Debug.h"
+
 namespace GHTN
 {
 	Condition::Condition
@@ -85,7 +87,7 @@ namespace GHTN
 					case Logic::OR:
 						return RecursiveCheck(Left(index), world) || RecursiveCheck(Right(index), world);
 					default: 
-						// TODO: Assert
+						GHTN_ASSERT_FAIL("Invalid logical operator");
 						return false;
 					}
 				}
@@ -94,7 +96,7 @@ namespace GHTN
 		}
 		else
 		{
-			// TODO: Assert
+			GHTN_ASSERT_FAIL("Node index not in tree");
 			return false;
 		}
 	}

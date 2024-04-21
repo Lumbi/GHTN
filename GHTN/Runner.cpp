@@ -1,5 +1,6 @@
 #include "Runner.h"
 
+#include "Debug.h"
 #include "Planner.h"
 #include "Task.h"
 #include "World.h"
@@ -9,7 +10,7 @@ namespace GHTN
 	Runner::Runner(OperationExecutorInterface* operationExecutor)
 		: m_OperationExecutor(operationExecutor)
 	{
-		// TODO: Assert if m_OperationExecutor is null
+		GHTN_ASSERT(m_OperationExecutor != nullptr, "Must have a valid operation executor");
 	}
 
 	void Runner::Run(Plan const* plan)

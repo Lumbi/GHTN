@@ -1,8 +1,7 @@
 #include "Task.h"
 
-#include <algorithm>
-
 #include "Condition.h"
+#include "Debug.h"
 #include "Operation.h"
 
 namespace GHTN
@@ -44,13 +43,13 @@ namespace GHTN
 
 	void Task::SetParameter(Parameter::Index index, Parameter::Value value)
 	{
-		// TODO: Assert if index out of bounds
+		GHTN_ASSERT(index < m_Parameters.size(), "Parameter out of bounds");
 		m_Parameters[index] = value;
 	}
 
 	void Task::AddEffect(Effect&& effect)
 	{
-		// TODO: Assert if composite node
+		GHTN_ASSERT(IsPrimitive(), "Only primitive tasks can have effects");
 		m_Effects.emplace_back(std::move(effect));
 	}
 

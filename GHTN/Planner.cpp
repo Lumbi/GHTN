@@ -11,22 +11,16 @@
 
 namespace GHTN
 {
-	World Planner::Apply(Task const& task, World world)
-	{
-		for (auto&& effect : task.m_Effects)
-		{
-			std::visit([&](auto&& each) { each(world); }, effect);
-		}
-		return world;
-	}
-
 	std::tuple<World, Planner::PartialPlan> Planner::RecursivePartialPlan(Task const* task, World const world)
 	{
 		if (task->CanExecute(world))
 		{
 			if (task->IsPrimitive())
 			{
-				return std::make_tuple(Apply(*task, world), PartialPlan { task });
+				World updatedWorld = world;
+				task->ApplyEffects(updatedWorld);
+				task->AssumeExpectations(updatedWorld);
+				return std::make_tuple(std::move(updatedWorld), PartialPlan{task});
 			}
 			else
 			{

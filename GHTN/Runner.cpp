@@ -39,7 +39,7 @@ namespace GHTN
 		return m_Plan && m_CurrentTask != m_Plan->cend();
 	}
 
-	void Runner::Update(World const& world)
+	void Runner::Update(World& world)
 	{
 		if (IsRunning())
 		{
@@ -63,19 +63,25 @@ namespace GHTN
 				switch (result)
 				{
 				case Operation::Result::running: break;
-				case Operation::Result::success: AdvanceToNextTask(); break;
+				case Operation::Result::success: AdvanceToNextTask(world); break;
 				case Operation::Result::failure: Abort(); break;
 				}
 			}
 		}
 	}
 
-	void Runner::AdvanceToNextTask()
+	void Runner::AdvanceToNextTask(World& world)
 	{
+		if (Task const* currentTask = *m_CurrentTask)
+		{
+			currentTask->ApplyEffects(world);
+		}
+
 		if (m_CurrentOperation)
 		{
 			m_OperationExecutor->Stop(*m_CurrentOperation);
 		}
+
 		m_CurrentOperation = nullptr;
 		++m_CurrentTask;
 	}

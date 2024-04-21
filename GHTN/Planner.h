@@ -27,6 +27,5 @@ namespace GHTN
 		using PartialPlan = std::vector<Task const*>;
 
 		static std::tuple<World, PartialPlan> RecursivePartialPlan(Task const*, World);
-		static World Apply(Task const& task, World world);
 	};
 }

@@ -32,10 +32,10 @@ namespace GHTN
 
 		GHTN_API bool IsRunning() const;
 
-		GHTN_API void Update(World const&);
+		GHTN_API void Update(World&);
 
 	private:
-		void AdvanceToNextTask();
+		void AdvanceToNextTask(World&);
 
 	private:
 		Plan const* m_Plan = nullptr;

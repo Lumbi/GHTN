@@ -3,7 +3,7 @@
 namespace GHTN
 {
 	World::World()
-		: m_Properties(32) // TODO:
+		: m_Properties(32) // TODO: Remove magic number and use array instead of vector
 	{
 	}
 

@@ -54,6 +54,11 @@ namespace GHTN
 		m_Effects.emplace_back(std::move(effect));
 	}
 
+	void Task::AddExpectation(World::Property property, World::State state)
+	{
+		m_Expectations[property] = state;
+	}
+
 	bool Task::IsPrimitive() const
 	{
 		return std::holds_alternative<Operation const*>(m_Content);
@@ -87,5 +92,22 @@ namespace GHTN
 	bool Task::CanExecute(World const& world) const
 	{
 		return m_Conditions.Check(world);
+	}
+
+	void Task::ApplyEffects(World& world) const
+	{
+		for (auto&& effect : m_Effects)
+		{
+			std::visit([&](auto&& each) { each(world); }, effect);
+		}
+	}
+
+	void Task::AssumeExpectations(World& world) const
+	{
+		for (auto&& expectation : m_Expectations)
+		{
+			auto&& [property, state] = expectation;
+			world.Set(property, state);
+		}
 	}
 }

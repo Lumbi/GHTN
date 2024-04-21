@@ -18,7 +18,6 @@ namespace GHTN
 {
 	class Task
 	{
-		friend class Planner;
 		friend class Debug;
 
 	public:
@@ -27,8 +26,9 @@ namespace GHTN
 		static constexpr Composition ANY = Composition::any;
 
 		using SubTaskContainer = std::vector<Task const*>;
-		using EffectContainer = std::vector<Effect>;
 		using ParameterContainer = std::array<Parameter::Value, Parameter::MAX_COUNT>;
+		using EffectContainer = std::vector<Effect>;
+		using ExpectationContainer = std::unordered_map<World::Property, World::State>;
 
 	public:
 		GHTN_API explicit Task(Operation const*);
@@ -46,6 +46,8 @@ namespace GHTN
 
 		GHTN_API void AddEffect(Effect&&);
 
+		GHTN_API void AddExpectation(World::Property, World::State);
+
 	public:
 		bool IsPrimitive() const;
 
@@ -62,12 +64,17 @@ namespace GHTN
 	public:
 		bool CanExecute(World const&) const;
 
+		void ApplyEffects(World&) const;
+
+		void AssumeExpectations(World&) const;
+
 	private:
 		std::variant<Operation const*, SubTaskContainer> m_Content;
 		Composition m_Composition;
 		ConditionTree m_Conditions;
-		ParameterContainer m_Parameters;
+		ParameterContainer m_Parameters; // TODO: Change to std::unique_ptr<ParameterContainer>
 		EffectContainer m_Effects;
+		ExpectationContainer m_Expectations;
 		std::string m_Name;
 	};
 }

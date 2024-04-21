@@ -35,6 +35,13 @@ namespace GHTN
 
 		GHTN_API explicit Task(Composition, std::initializer_list<Task const*> subTasks);
 
+		~Task() = default;
+
+	public:
+		GHTN_API Task(Task&&) noexcept = default;
+
+		GHTN_API Task& operator=(Task&&) noexcept = default;
+
 	public:
 		GHTN_API std::string const& GetName() const;
 
@@ -72,7 +79,7 @@ namespace GHTN
 		std::variant<Operation const*, SubTaskContainer> m_Content;
 		Composition m_Composition;
 		ConditionTree m_Conditions;
-		ParameterContainer m_Parameters; // TODO: Change to std::unique_ptr<ParameterContainer>
+		std::unique_ptr<ParameterContainer> m_Parameters;
 		EffectContainer m_Effects;
 		ExpectationContainer m_Expectations;
 		std::string m_Name;

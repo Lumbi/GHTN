@@ -10,7 +10,7 @@ namespace GHTN
 		: m_Content(operation)
 		, m_Composition(Task::ALL)
 		, m_Conditions()
-		, m_Parameters()
+		, m_Parameters(std::make_unique<ParameterContainer>())
 		, m_Effects()
 		, m_Name()
 	{
@@ -20,7 +20,7 @@ namespace GHTN
 		: m_Content(subTasks)
 		, m_Composition(composition)
 		, m_Conditions()
-		, m_Parameters()
+		, m_Parameters(std::make_unique<ParameterContainer>())
 		, m_Effects()
 		, m_Name()
 	{
@@ -43,8 +43,8 @@ namespace GHTN
 
 	void Task::SetParameter(Parameter::Index index, Parameter::Value value)
 	{
-		GHTN_ASSERT(index < m_Parameters.size(), "Parameter out of bounds");
-		m_Parameters[index] = value;
+		GHTN_ASSERT(index < m_Parameters->size(), "Parameter out of bounds");
+		(*m_Parameters)[index] = value;
 	}
 
 	void Task::AddEffect(Effect&& effect)
@@ -70,7 +70,7 @@ namespace GHTN
 
 	Task::ParameterContainer const& Task::GetParameters() const
 	{
-		return m_Parameters;
+		return *m_Parameters;
 	}
 
 	bool Task::IsComposite() const

@@ -4,10 +4,13 @@
 #include "GHTN/Operation.h"
 #include "GHTN/Planner.h"
 #include "GHTN/Runner.h"
+#include "GHTN/Sensor.h"
 #include "GHTN/Task.h"
 #include "GHTN/World.h"
 
 #include "Test.h"
+
+#include <memory>
 
 namespace GHTNTest
 {
@@ -701,6 +704,73 @@ namespace GHTNTest
                 EXPECT(executor.m_OperationParameters.at(&operation)[i] == (i == 4 ? 99 : 0));
             }
             EXPECT(executor.m_OperationParameters.at(&operation).back() == 36);
+        }
+    }
+
+    TEST(Run_plan_while_sensor_enables_a_task)
+    {
+        Operation operation;
+        Task task1(&operation);
+        Task task2(&operation);
+        World::Property property = 1;
+        task1.AddExpectation(property, 17);
+        Task root(Task::ALL, { &task1, &task2 });
+        Domain domain(&root);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+        std::unique_ptr<Sensor> sensor = Sensor::From([=](World& world) { world.Set(property, 17); });
+        MockExecutor::AlwaysSucceed executor;
+        Runner runner(&executor);
+        runner.Run(&plan);
+
+        EXPECT(runner.IsRunning());
+        {
+            runner.Update(world);
+            EXPECT(world.Get(property) == 0);
+        }
+        {
+            sensor->Update(world);
+            EXPECT(world.Get(property) == 17);
+        }
+        {
+            runner.Update(world);
+            EXPECT(!runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 2);
+            EXPECT(executor.m_StoppedOperations.size() == 2);
+        }
+    }
+
+    TEST(Run_plan_while_sensor_disables_a_task)
+    {
+        Operation operation;
+        Task task1(&operation);
+        Task task2(&operation);
+        World::Property property = 1;
+        task2.SetConditions(Just(Condition(property, Predicate::equal, 17)));
+        Task root(Task::ALL, { &task1, &task2 });
+        Domain domain(&root);
+        World world;
+        world.Set(property, 17);
+        Plan plan = Planner::Find(domain, world);
+        std::unique_ptr<Sensor> sensor = Sensor::From([=](World& world) { world.Set(property, 36); });
+        MockExecutor::AlwaysSucceed executor;
+        Runner runner(&executor);
+        runner.Run(&plan);
+
+        EXPECT(runner.IsRunning());
+        {
+            runner.Update(world);
+            EXPECT(world.Get(property) == 17);
+        }
+        {
+            sensor->Update(world);
+            EXPECT(world.Get(property) != 17);
+        }
+        {
+            runner.Update(world);
+            EXPECT(!runner.IsRunning());
+            EXPECT(executor.m_ExecutedOperations.size() == 1);
+            EXPECT(executor.m_StoppedOperations.size() == 1);
         }
     }
 }

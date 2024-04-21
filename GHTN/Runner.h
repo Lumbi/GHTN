@@ -13,6 +13,8 @@ namespace GHTN
 	public:
 		using Parameters = std::span<const Parameter::Value, Parameter::MAX_COUNT>;
 
+		virtual ~OperationExecutorInterface() {};
+
 	public:
 		virtual void Execute(Operation const&, Parameters) = 0;
 

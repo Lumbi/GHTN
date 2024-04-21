@@ -157,6 +157,43 @@ namespace GHTNTest
         EXPECT(plan.empty());
     }
 
+    TEST(Find_plan_on_domain_where_the_expectations_of_a_task_enable_another_task)
+    {
+        Operation operation;
+        Task task1(&operation);
+        Task task2(&operation);
+        Task task3(&operation);
+        World::Property property = 1;
+        task1.AddExpectation(property, 36);
+        task3.SetConditions(Just(Condition(property, Predicate::greater, 17)));
+        Task root(Task::ALL, { &task1, &task2, &task3 });
+        Domain domain(&root);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+
+        EXPECT(plan.size() == 3);
+        EXPECT(plan[0] == &task1);
+        EXPECT(plan[1] == &task2);
+        EXPECT(plan[2] == &task3);
+    }
+
+    TEST(Find_plan_on_domain_where_the_exectations_of_a_task_disable_another_task)
+    {
+        Operation operation;
+        Task task1(&operation);
+        Task task2(&operation);
+        Task task3(&operation);
+        World::Property property = 1;
+        task1.AddExpectation(property, 42);
+        task3.SetConditions(Just(Condition(property, Predicate::equal, 98)));
+        Task root(Task::ALL, { &task1, &task2, &task3 });
+        Domain domain(&root);
+        World world;
+        Plan plan = Planner::Find(domain, world);
+
+        EXPECT(plan.empty());
+    }
+
     TEST(Find_plan_on_domain_with_a_task_with_OR_condition)
     {
         Operation operation;

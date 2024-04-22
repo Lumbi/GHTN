@@ -2,7 +2,7 @@
 
 #include "GHTN.h"
 
-#include "Effecting.h"
+#include "World.h"
 
 namespace GHTN
 {
@@ -38,7 +38,7 @@ namespace GHTN
 
 namespace GHTN
 {
-	using Effect = EffectingVariant
+	using Effect = std::variant
 		<
 			Effects::Identity,
 			Effects::Set,

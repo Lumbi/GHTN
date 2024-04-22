@@ -50,7 +50,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>DEBUG;_CONSOLE;GHTN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -67,7 +67,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;GHTN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,7 +82,6 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="Domain.h" />
     <ClInclude Include="Effect.h" />
-    <ClInclude Include="Effecting.h" />
     <ClInclude Include="GHTN.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="Parameter.h" />
@@ -97,7 +96,6 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Domain.cpp" />
     <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="Effecting.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="Parameter.cpp" />
     <ClCompile Include="Planner.cpp" />

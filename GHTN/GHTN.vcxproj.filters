@@ -30,9 +30,6 @@
     <ClInclude Include="Effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Effecting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GHTN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,9 +69,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effecting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Domain.cpp">

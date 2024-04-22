@@ -11,7 +11,7 @@ namespace GHTN
 	class OperationExecutorInterface
 	{
 	public:
-		using Parameters = std::span<const Parameter::Value, Parameter::MAX_COUNT>;
+		using Parameters = Parameter::Value const[];
 
 		virtual ~OperationExecutorInterface() {};
 

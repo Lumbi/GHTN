@@ -505,7 +505,7 @@ namespace GHTNTest
             void Execute(Operation const& operation, Parameters parameters) override
             {
                 m_ExecutedOperations.emplace_back(&operation);
-                std::copy(parameters.begin(), parameters.end(), m_OperationParameters[&operation].begin());
+                std::copy(parameters, parameters + Parameter::MAX_COUNT, m_OperationParameters[&operation].begin());
             }
 
             void Stop(Operation const& operation) override

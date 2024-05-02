@@ -43,9 +43,9 @@ namespace GHTN
 		GHTN_API Task& operator=(Task&&) noexcept = default;
 
 	public:
-		GHTN_API std::string const& GetName() const;
+		GHTN_API char const* GetName() const;
 
-		GHTN_API void SetName(std::string&&);
+		GHTN_API void SetName(char const*);
 
 		GHTN_API void SetConditions(ConditionTree&&);
 

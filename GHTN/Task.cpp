@@ -26,14 +26,14 @@ namespace GHTN
 	{
 	}
 
-	std::string const& Task::GetName() const
+	char const* Task::GetName() const
 	{
-		return m_Name;
+		return m_Name.c_str();
 	}
 
-	void Task::SetName(std::string&& name)
+	void Task::SetName(char const* name)
 	{
-		m_Name = std::move(name);
+		m_Name = std::string(name);
 	}
 
 	void Task::SetConditions(ConditionTree&& conditions)

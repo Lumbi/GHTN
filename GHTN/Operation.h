@@ -20,9 +20,9 @@ namespace GHTN
 		GHTN_API explicit Operation();
 
 	public:
-		GHTN_API std::string const& GetName() const;
+		GHTN_API char const* GetName() const;
 
-		GHTN_API void SetName(std::string&&);
+		GHTN_API void SetName(char const*);
 
 	private:
 		std::string m_Name;

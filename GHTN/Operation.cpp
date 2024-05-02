@@ -7,13 +7,13 @@ namespace GHTN
 	{
 	}
 
-	std::string const& Operation::GetName() const
+	char const* Operation::GetName() const
 	{
-		return m_Name;
+		return m_Name.c_str();
 	}
 
-	void Operation::SetName(std::string&& name)
+	void Operation::SetName(char const* name)
 	{
-		m_Name = std::move(name);
+		m_Name = std::string(name);
 	}
 }

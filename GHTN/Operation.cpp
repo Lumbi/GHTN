@@ -2,9 +2,18 @@
 
 namespace GHTN
 {
+	Operation::ID Operation::s_ID = 0;
+
 	Operation::Operation()
-		: m_Name()
+		: m_ID(s_ID)
+		, m_Name()
 	{
+		++s_ID;
+	}
+
+	Operation::ID Operation::GetID() const
+	{
+		return m_ID;
 	}
 
 	char const* Operation::GetName() const

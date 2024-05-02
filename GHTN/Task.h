@@ -33,7 +33,16 @@ namespace GHTN
 	public:
 		GHTN_API explicit Task(Operation const*);
 
-		GHTN_API explicit Task(Composition, std::initializer_list<Task const*> subTasks);
+	private:
+		GHTN_API explicit Task(Composition);
+
+	public:
+		template<typename TaskContainerType= std::initializer_list<Task const*>>
+		Task(Task::Composition composition, TaskContainerType subTasks)
+			: Task(composition)
+		{
+			m_Content = SubTaskContainer(std::begin(subTasks), std::end(subTasks));
+		}
 
 		~Task() = default;
 

@@ -16,8 +16,8 @@ namespace GHTN
 	{
 	}
 
-	Task::Task(Task::Composition composition, std::initializer_list<Task const*> subTasks)
-		: m_Content(subTasks)
+	Task::Task(Task::Composition composition)
+		: m_Content()
 		, m_Composition(composition)
 		, m_Conditions()
 		, m_Parameters(std::make_unique<ParameterContainer>())

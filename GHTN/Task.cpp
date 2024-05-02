@@ -17,7 +17,7 @@ namespace GHTN
 	}
 
 	Task::Task(Task::Composition composition)
-		: m_Content()
+		: m_Content(SubTaskContainer())
 		, m_Composition(composition)
 		, m_Conditions()
 		, m_Parameters(std::make_unique<ParameterContainer>())
@@ -34,6 +34,18 @@ namespace GHTN
 	void Task::SetName(char const* name)
 	{
 		m_Name = std::string(name);
+	}
+
+	void Task::AddSubTask(Task const* subTask)
+	{
+		if (SubTaskContainer* subTasks = std::get_if<SubTaskContainer>(&m_Content))
+		{
+			subTasks->emplace_back(subTask);
+		} 
+		else
+		{
+			GHTN_ASSERT_FAIL("Only composite tasks can have sub tasks.");
+		}
 	}
 
 	void Task::SetConditions(ConditionTree&& conditions)

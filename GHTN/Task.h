@@ -33,12 +33,10 @@ namespace GHTN
 	public:
 		GHTN_API explicit Task(Operation const*);
 
-	private:
 		GHTN_API explicit Task(Composition);
 
-	public:
-		template<typename TaskContainerType= std::initializer_list<Task const*>>
-		Task(Task::Composition composition, TaskContainerType subTasks)
+		template<typename TaskContainerType = std::initializer_list<Task const*>>
+		Task(Task::Composition composition, TaskContainerType const& subTasks)
 			: Task(composition)
 		{
 			m_Content = SubTaskContainer(std::begin(subTasks), std::end(subTasks));
@@ -55,6 +53,8 @@ namespace GHTN
 		GHTN_API char const* GetName() const;
 
 		GHTN_API void SetName(char const*);
+
+		GHTN_API void AddSubTask(Task const*);
 
 		GHTN_API void SetConditions(ConditionTree&&);
 

@@ -16,8 +16,10 @@
 #include <variant>
 #include <vector>
 
-#ifdef GHTN_EXPORTS
+#if defined(GHTN_EXPORTS)
 #define GHTN_API __declspec(dllexport)
-#else
+#elif defined(GHTN_IMPORTS)
 #define GHTN_API __declspec(dllimport)
+#else
+#define GHTN_API
 #endif

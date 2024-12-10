@@ -9,6 +9,8 @@ namespace GHTN
 
 namespace GHTN
 {
+	static constexpr std::size_t MAX_WORLD_PROPERTY_COUNT = 32;
+
 	class World
 	{
 	public:
@@ -23,7 +25,6 @@ namespace GHTN
 		GHTN_API void Set(Property, State);
 
 	private:
-		std::vector<State> m_Properties;
+		std::array<State, MAX_WORLD_PROPERTY_COUNT> m_Properties;
 	};
 }
-

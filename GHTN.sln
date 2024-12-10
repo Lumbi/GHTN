@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GHTN", "GHTN\GHTN.vcxproj", "{B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GHTNTest", "GHTNTest\GHTNTest.vcxproj", "{3F59213E-C733-401C-B336-47C129144C3B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C} = {B8A5EB2B-3E4D-4FD0-95E5-DEB12F25828C}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
